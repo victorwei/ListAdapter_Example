@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+
+    <!-- Title -->
+
+    <TextView
+        android:id="@+id/assignment_title_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/assignment_title"
+        android:layout_marginTop="20dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+    <EditText
+        android:id="@+id/assignment_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/assignment_title_label"
+        android:hint="@string/assignment_title_hint"/>
+
+
+    <!-- Due Date -->
+
+    <TextView
+        android:id="@+id/dueDate_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/duedate"
+        android:layout_below="@+id/assignment_title"
+        android:layout_marginTop="20dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+    <TextView
+        android:id="@+id/duetext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dueDate_title"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="3dp"
+        android:layout_alignParentLeft="true"
+        android:text="@string/duetext"/>
+
+
+    <TextView
+        android:id="@+id/duedate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:text="@string/defaultdate"
+        android:layout_alignTop="@+id/duetext"
+        android:layout_alignEnd="@+id/datebutton" />
+
+    <Button
+        android:id="@+id/datebutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/duedate"
+        android:layout_marginTop="5dp"
+        android:text="@string/button_date"
+        />
+
+
+    <!-- Reminder -->
+
+    <TextView
+        android:id="@+id/reminder_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/remindertitle"
+        android:layout_below="@+id/datebutton"
+        android:layout_marginTop="20dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+     />
+
+    <TextView
+        android:id="@+id/reminder_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/reminder_title"
+        android:text="@string/remindertext"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="3dp"/>
+
+
+    <TextView
+        android:id="@+id/reminder_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reminderdate"
+        android:layout_marginLeft="3dp"
+        android:layout_above="@+id/reminderbutton"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/reminderbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reminder_text"
+        android:layout_marginTop="5dp"
+        android:text="@string/reminderbutton"/>
+
+
+    <!-- Status -->
+
+    <TextView
+        android:id="@+id/status_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reminderbutton"
+        android:layout_marginTop="20dp"
+        android:text="@string/statustitle"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        />
+    <!--
+    <RadioGroup
+        android:id="@+id/statusGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/status_text"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/statusNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/status_notfinished"
+            android:checked="true"/>
+
+        <RadioButton
+            android:id="@+id/statusYes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/status_finished"/>
+
+
+
+    </RadioGroup>
+
+    -->
+
+
+
+    <!-- Bottom Buttons -->
+
+    <Button
+        android:id="@+id/cancelbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="40dp"
+        android:text="@string/cancelbutton" />
+
+    <Button
+        android:id="@+id/submitbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="40dp"
+        android:text="@string/submitbutton"/>
+
+
+
+
+
+
+</RelativeLayout>
