@@ -139,7 +139,6 @@ public class AddAssignmentActivity extends Activity {
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int year = calendar.get(Calendar.YEAR);
-
         setDueDateString(month, day, year);
         setReminderDateString(month, day, year);
 
@@ -197,7 +196,7 @@ public class AddAssignmentActivity extends Activity {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear,
                               int dayOfMonth) {
-            setDueDateString(monthOfYear, dayOfMonth, year);
+            setReminderDateString(monthOfYear, dayOfMonth, year);
 
             reminderDateView.setText(reminderDateString);
         }

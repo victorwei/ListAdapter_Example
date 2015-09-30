@@ -30,13 +30,14 @@ public class AssignmentAdapter extends BaseAdapter {
 
     public void addItem (AssignmentRecord item) {
         alist.add(item);
+        notifyDataSetChanged();
     }
 
     public void deleteItem (AssignmentRecord item) {
         alist.remove(item);
     }
 
-
+    @Override
     public int getCount() {
         return alist.size();
     }

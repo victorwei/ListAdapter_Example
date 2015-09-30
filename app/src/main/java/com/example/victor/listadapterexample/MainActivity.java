@@ -31,9 +31,16 @@ public class MainActivity extends ListActivity {
 
 
 
+
         RelativeLayout headerView = (RelativeLayout)getLayoutInflater().inflate(R.layout.activity_main, getListView(), false);
 
         getListView().addHeaderView(headerView);
+
+
+        if (null == headerView){
+            return;
+        }
+
 
         final Button addButton = (Button)findViewById(R.id.AddItemButton);
         addButton.setOnClickListener(new View.OnClickListener() {

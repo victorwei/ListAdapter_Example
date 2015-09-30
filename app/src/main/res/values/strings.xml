@@ -20,7 +20,7 @@
 
     <!-- Reminder -->
     <string name="remindertitle">Reminder Date</string>
-    <string name="remindertext"> Start reminding me on:</string>
+    <string name="remindertext"> Remind me on:  </string>
     <string name="reminderdate">00-00-0000</string>
     <string name="reminderbutton">Choose Reminder </string>
 

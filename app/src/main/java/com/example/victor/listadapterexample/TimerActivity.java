@@ -18,10 +18,11 @@ public class TimerActivity extends Activity
 {
 
 
-    Button btnStart, btnStop;
+    Button btnStart, btnStop, btnFinish;
     TextView textViewTimer, textDialog;
     final static Integer studytime = 10000;        // 3 minutes
     final static Integer breaktime = 30000;
+    final static Integer longbreaktime = 10000;
     final static Integer ticktime = 1000;         // 1 second interval
     Integer counter = 1;
     CounterClass WorkTimer, ShortBreakTimer, LongBreakTimer;
@@ -36,6 +37,7 @@ public class TimerActivity extends Activity
 
         btnStart = (Button)findViewById(R.id.btnStart);
         btnStop = (Button)findViewById(R.id.btnStop);
+        btnFinish = (Button)findViewById(R.id.btnBack);
         textViewTimer = (TextView)findViewById(R.id.textViewTimer);
         textDialog = (TextView)findViewById(R.id.textDialog);
 
@@ -46,6 +48,7 @@ public class TimerActivity extends Activity
         startTimer(counter);
 
         //final CounterClass countertimer = new CounterClass(studytime,ticktime);
+        //  Button Start
 
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +64,7 @@ public class TimerActivity extends Activity
             }
         });
 
-
+        //Button Stop
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,6 +79,14 @@ public class TimerActivity extends Activity
         });
 
 
+        btnFinish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+
     }
 
     public void startTimer (int counterID) {
@@ -84,7 +95,7 @@ public class TimerActivity extends Activity
             WorkTimer = new CounterClass(studytime, ticktime);
 
         } else if ((counterID % 8) == 0 ) {
-            LongBreakTimer = new CounterClass(breaktime, ticktime);        //long break time
+            LongBreakTimer = new CounterClass(longbreaktime, ticktime);        //long break time
 
         } else if ((counterID % 2) == 0 ){
             ShortBreakTimer = new CounterClass(breaktime, ticktime);

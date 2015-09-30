@@ -24,6 +24,7 @@ public class AssignmentRecord {
     public final static String DDATE = "due_date";
     public final static String RDATE = "reminder_date";
     public final static String REMINDER = "reminder";
+    public final static String FILE = "filename";
 
 
     private String itemName = new String();
@@ -33,7 +34,7 @@ public class AssignmentRecord {
     private Status defaultStatus = Status.NOTFINISHED;
 
 
-    public final static SimpleDateFormat standardDateformat = new SimpleDateFormat("MM-dd-yyyy", Locale.US);
+    public final static SimpleDateFormat standardDateformat = new SimpleDateFormat("mm-dd-yyyy", Locale.US);
 
 
 
@@ -48,6 +49,7 @@ public class AssignmentRecord {
     AssignmentRecord (Intent intent){
         itemName = intent.getStringExtra(AssignmentRecord.ITEM);
         //defaultStatus = Status.valueOf(intent.getStringExtra(AssignmentRecord.STATUS));
+
         try {
             dueDate = AssignmentRecord.standardDateformat.parse(intent.getStringExtra(AssignmentRecord.DDATE));
         } catch (ParseException e) {
@@ -58,6 +60,7 @@ public class AssignmentRecord {
         } catch (ParseException e) {
             reminderDate = new Date();
         }
+
 
 
 

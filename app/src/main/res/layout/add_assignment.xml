@@ -106,7 +106,7 @@
 
 
     <!-- Status -->
-
+    <!--
     <TextView
         android:id="@+id/status_text"
         android:layout_width="wrap_content"
@@ -116,7 +116,7 @@
         android:text="@string/statustitle"
         android:textAppearance="?android:attr/textAppearanceLarge"
         />
-    <!--
+
     <RadioGroup
         android:id="@+id/statusGroup"
         android:layout_width="match_parent"

@@ -51,6 +51,7 @@
         android:layout_alignBaseline="@+id/adapter_dueDate"
         android:layout_alignParentRight="true"
         android:checked="false"/>
+    <!--
     <Button
         android:id="@+id/adapater_timerButton"
         android:layout_width="wrap_content"
@@ -59,6 +60,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="45dp"
         android:text="@string/item_button"
-        />
+        />  -->
 
 </RelativeLayout>

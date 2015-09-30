@@ -23,6 +23,14 @@
         android:layout_marginRight="67dp"
         android:text="Stop"/>
 
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Done Studying!"
+        android:layout_below="@+id/textDialog"
+        android:layout_centerHorizontal="true" />
+
     <TextView
         android:id="@+id/textViewTimer"
         android:layout_above="@+id/btnStop"
