@@ -84,6 +84,10 @@ public class AssignmentAdapter extends BaseAdapter {
                 if (isChecked){
                     //prompt to delete record;
                     assignmentRecord.setStatus(AssignmentRecord.Status.FINISHED);
+
+                    // cancel intent for alarm manager
+
+
                 } else {
                     // do nothing
                 }

@@ -1,10 +1,14 @@
 package com.example.victor.listadapterexample;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -28,14 +32,19 @@ import com.example.victor.listadapterexample.AssignmentRecord.Status;
  */
 public class AddAssignmentActivity extends Activity {
 
+    //set notification variables
+    private AlarmManager alarmManager;
+    private Intent notifcationReceiverIntent;
+    private PendingIntent notificationReceiverPendingIntent;
+
+
+    //variables
     private static String dueDateString;
     private static String reminderDateString;
     private static TextView dueDateView;
     private static TextView reminderDateView;
 
-
-
-
+    // variables for
     private Date aDate;
     private EditText aAssignmentText;
     private RadioButton aDefaultRbutton;
@@ -51,12 +60,14 @@ public class AddAssignmentActivity extends Activity {
 
 
 
-
+        // SET UP VIEW
         //aDefaultRbutton = (RadioButton)findViewById(R.id.statusNo);
         //aStatusRGroup = (RadioGroup)findViewById(R.id.statusGroup);
         aAssignmentText = (EditText)findViewById(R.id.assignment_title);
         dueDateView = (TextView)findViewById(R.id.duedate);
         reminderDateView = (TextView)findViewById(R.id.reminder_date);
+
+
 
 
         // button to choose due date
@@ -112,12 +123,7 @@ public class AddAssignmentActivity extends Activity {
 
                 Intent intent= new Intent();
 
-
-
                 AssignmentRecord.sendIntent(intent, assignmentTitle, duedate, reminderdate);
-
-
-
 
                 setResult(RESULT_OK, intent);
                 finish();
@@ -126,6 +132,9 @@ public class AddAssignmentActivity extends Activity {
         });
 
     }
+
+
+
 
 
     // set default date
