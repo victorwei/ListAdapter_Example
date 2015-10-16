@@ -105,7 +105,7 @@ public class MainActivity extends ListActivity {
                 AssignmentRecord newdata = new AssignmentRecord(data);
                 aAdapter.addItem(newdata);
 
-                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, newdata.getDueMonth(),
+                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, newdata.getRemindDayLong(),
                         AlarmManager.INTERVAL_DAY, notificationReceiverPendingIntent);
 
 

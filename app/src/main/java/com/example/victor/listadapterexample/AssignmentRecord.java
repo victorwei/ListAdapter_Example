@@ -2,6 +2,7 @@ package com.example.victor.listadapterexample;
 
 import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -25,6 +26,8 @@ public class AssignmentRecord {
         NOTFINISHED, FINISHED
     };
 
+
+
     public final static String ITEM = "item";
     public final static String STATUS = "status";
     public final static String DDATE = "due_date";
@@ -34,14 +37,17 @@ public class AssignmentRecord {
 
 
     private String itemName = new String();
-    //private String itemType = new String();
+    private String notificationTitle = new String();
+    private String notificationText = new String();
+    private String dueDateString = new String();
     private Date dueDate = new Date();
     private Date reminderDate = new Date();
     private Status defaultStatus = Status.NOTFINISHED;
 
     private AlarmManager alarmManager;
-    private Intent notifcationReceiverIntent, notificationIntent;
+    private Intent notificationReceiverIntent, notificationIntent;
     private PendingIntent notificationReceiverPendingIntent, notificationPendingIntent;
+    private static final int mID = 1;
 
 
     public final static SimpleDateFormat standardDateformat = new SimpleDateFormat("mm-dd-yyyy", Locale.US);
@@ -59,6 +65,7 @@ public class AssignmentRecord {
     AssignmentRecord (Intent intent){
         itemName = intent.getStringExtra(AssignmentRecord.ITEM);
         //defaultStatus = Status.valueOf(intent.getStringExtra(AssignmentRecord.STATUS));
+        dueDateString = intent.getStringExtra(AssignmentRecord.DDATE);
 
         try {
             dueDate = AssignmentRecord.standardDateformat.parse(intent.getStringExtra(AssignmentRecord.DDATE));
@@ -77,8 +84,8 @@ public class AssignmentRecord {
 
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        notifcationReceiverIntent = new Intent(context, alarmNotificationReceiver.class);
-        notificationReceiverPendingIntent = PendingIntent.getBroadcast(context, 0, notifcationReceiverIntent, 0);
+        notificationReceiverIntent = new Intent(context, alarmNotificationReceiver.class);
+        notificationReceiverPendingIntent = PendingIntent.getBroadcast(context, 0, notificationReceiverIntent, 0);
 
 
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, getRemindDayLong(), AlarmManager.INTERVAL_DAY, notificationReceiverPendingIntent);
@@ -95,11 +102,19 @@ public class AssignmentRecord {
         @Override
         public void onReceive(Context context, Intent intent){
 
+            notificationTitle = itemName + " due: " + dueDateString;
+            notificationText = "Stop procrastinating and get to work!";
+
+
             notificationIntent = new Intent (context, MainActivity.class);
+            notificationPendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            notificationPendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
+            Notification.Builder notificationBuilder = new Notification.Builder(context).setTicker("test").setContentTitle(notificationTitle)
+                    .setContentText(notificationText).setSmallIcon(R.drawable.notification_template_icon_bg);
 
-            Notification.Builder notificationBuilder = new Notification.Builder(context).setTicker("test");
+            NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+            notificationManager.notify(mID, notificationBuilder.build());
 
 
 
@@ -146,6 +161,8 @@ public class AssignmentRecord {
     public void setReminderDate (Date rDate){
         reminderDate = rDate;
     }
+
+
     public Long getRemindDayLong() {
         Calendar targetdate = Calendar.getInstance();
         targetdate.setTime (reminderDate);
