@@ -23,6 +23,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -32,7 +34,7 @@ import java.util.GregorianCalendar;
 public class MainActivity extends ListActivity {
 
     private static final int ADD_ASSIGNMENT = 0;
-    private static final String FILE_DATA = "example_main_activity.txt";
+    private static final String FILE_DATA = "saveFile.tmp";
 
     private static final int MENU_DEL = Menu.FIRST;
     private static final int MENU_DUMP = Menu.FIRST + 1;
@@ -105,8 +107,7 @@ public class MainActivity extends ListActivity {
                 AssignmentRecord newdata = new AssignmentRecord(data);
                 aAdapter.addItem(newdata);
 
-                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, newdata.getRemindDayLong(),
-                        AlarmManager.INTERVAL_DAY, notificationReceiverPendingIntent);
+                newdata.setReminderNotification(getApplicationContext());
 
 
                 //sync_calendar(newdata.getItemName());
@@ -115,25 +116,24 @@ public class MainActivity extends ListActivity {
         }
     }
 
-/*
+
     @Override
     protected void onResume(){
-        super.onResume();
-
         //load previous shit
         if (aAdapter.getCount() == 0) {
-            //load_data();
+            load_data();
         }
+
+        super.onResume();
     }
 
     @Override
     protected void onPause() {
+        save_data();
         super.onPause();
 
-        //save_data();
-
     }
-*/
+
 
 
 
@@ -176,6 +176,8 @@ public class MainActivity extends ListActivity {
 
 
 
+
+
     private void load_data(){
         BufferedReader reader = null;
         try {
@@ -188,6 +190,8 @@ public class MainActivity extends ListActivity {
 
             while (null != (title = reader.readLine())){
                 duedate = AssignmentRecord.standardDateformat.parse(reader.readLine());
+
+
                 reminddate = AssignmentRecord.standardDateformat.parse(reader.readLine());
                 aAdapter.addItem(new AssignmentRecord(title, duedate, reminddate));
             }

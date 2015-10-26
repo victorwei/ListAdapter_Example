@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -26,31 +27,37 @@ public class AssignmentRecord {
         NOTFINISHED, FINISHED
     };
 
+    public static final String LINE_SEP = System.getProperty("line.separator");
 
 
     public final static String ITEM = "item";
     public final static String STATUS = "status";
     public final static String DDATE = "due_date";
     public final static String RDATE = "reminder_date";
+    public final static String DATEDDATE = "due date";
+    public final static String DATERDATE = "reminder date";
     public final static String REMINDER = "reminder";
-    public final static String FILE = "filename";
+    public final static String FILENAME = "filename";
 
 
     private String itemName = new String();
     private String notificationTitle = new String();
     private String notificationText = new String();
     private String dueDateString = new String();
+    private String remindDateString = new String();
     private Date dueDate = new Date();
     private Date reminderDate = new Date();
     private Status defaultStatus = Status.NOTFINISHED;
 
     private AlarmManager alarmManager;
+    private NotificationManager notificationManager;
+    private Notification.Builder notificationBuilder;
     private Intent notificationReceiverIntent, notificationIntent;
     private PendingIntent notificationReceiverPendingIntent, notificationPendingIntent;
     private static final int mID = 1;
 
 
-    public final static SimpleDateFormat standardDateformat = new SimpleDateFormat("mm-dd-yyyy", Locale.US);
+    public final static SimpleDateFormat standardDateformat = new SimpleDateFormat("MM-dd-yyyy", Locale.US);
 
 
 
@@ -66,6 +73,7 @@ public class AssignmentRecord {
         itemName = intent.getStringExtra(AssignmentRecord.ITEM);
         //defaultStatus = Status.valueOf(intent.getStringExtra(AssignmentRecord.STATUS));
         dueDateString = intent.getStringExtra(AssignmentRecord.DDATE);
+        remindDateString = intent.getStringExtra(AssignmentRecord.RDATE);
 
         try {
             dueDate = AssignmentRecord.standardDateformat.parse(intent.getStringExtra(AssignmentRecord.DDATE));
@@ -88,7 +96,10 @@ public class AssignmentRecord {
         notificationReceiverPendingIntent = PendingIntent.getBroadcast(context, 0, notificationReceiverIntent, 0);
 
 
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, getRemindDayLong(), AlarmManager.INTERVAL_DAY, notificationReceiverPendingIntent);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, getRemindDayLong(),
+                AlarmManager.INTERVAL_DAY, notificationReceiverPendingIntent);
+
+
 
     }
 
@@ -98,6 +109,9 @@ public class AssignmentRecord {
     }
 
 
+
+
+    //Receiver class when AlarmManager goes off
     public class alarmNotificationReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent){
@@ -107,12 +121,18 @@ public class AssignmentRecord {
 
 
             notificationIntent = new Intent (context, MainActivity.class);
+            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+
+            notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+
             notificationPendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            Notification.Builder notificationBuilder = new Notification.Builder(context).setTicker("test").setContentTitle(notificationTitle)
-                    .setContentText(notificationText).setSmallIcon(R.drawable.notification_template_icon_bg);
+            notificationBuilder = new Notification.Builder(context).setTicker("test")
+                    .setContentTitle(notificationTitle)
+                    .setContentText(notificationText)
+                    .setSmallIcon(R.drawable.notification_template_icon_bg);
 
-            NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 
             notificationManager.notify(mID, notificationBuilder.build());
 
@@ -133,7 +153,8 @@ public class AssignmentRecord {
         intent.putExtra(AssignmentRecord.ITEM, itemtitle);
         intent.putExtra(AssignmentRecord.DDATE, duedate);
         intent.putExtra(AssignmentRecord.RDATE, reminddate);
-        //intent.putExtra(AssignmentRecord.STATUS, status);
+        //intent.putExtra(AssignmentRecord.DATEDDATE, dDueDate.getTime());
+        //intent.putExtra(AssignmentRecord.DATERDATE, dRemindDate.getTime());
 
     }
 
@@ -160,6 +181,12 @@ public class AssignmentRecord {
     }
     public void setReminderDate (Date rDate){
         reminderDate = rDate;
+    }
+
+    @Override
+    public String toString(){
+        return itemName + LINE_SEP + standardDateformat.format(dueDate) +
+                LINE_SEP + standardDateformat.format(reminderDate);
     }
 
 

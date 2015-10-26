@@ -23,6 +23,7 @@
         </activity>
         <activity android:name=".TimerActivity">
         </activity>
+        <receiver android:name=".AssignmentRecord$alarmNotificationReceiver" />
     </application>
 
 </manifest>

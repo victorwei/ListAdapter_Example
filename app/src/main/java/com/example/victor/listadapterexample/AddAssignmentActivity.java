@@ -45,7 +45,7 @@ public class AddAssignmentActivity extends Activity {
     private static TextView reminderDateView;
 
     // variables for
-    private Date aDate;
+    private Date aDate, dDate, rDate;
     private EditText aAssignmentText;
     private RadioButton aDefaultRbutton;
     private RadioGroup aStatusRGroup;
@@ -178,6 +178,13 @@ public class AddAssignmentActivity extends Activity {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear,
                               int dayOfMonth) {
+            Calendar dDate = Calendar.getInstance();
+            dDate.set(Calendar.MONTH, monthOfYear);
+            dDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            dDate.set(Calendar.YEAR, year);
+
+
+
             setDueDateString(monthOfYear, dayOfMonth, year);
 
             dueDateView.setText(dueDateString);
@@ -205,6 +212,12 @@ public class AddAssignmentActivity extends Activity {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear,
                               int dayOfMonth) {
+
+            Calendar rDate = Calendar.getInstance();
+            rDate.set(Calendar.MONTH, monthOfYear);
+            rDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            rDate.set(Calendar.YEAR, year);
+
             setReminderDateString(monthOfYear, dayOfMonth, year);
 
             reminderDateView.setText(reminderDateString);
@@ -225,9 +238,12 @@ public class AddAssignmentActivity extends Activity {
 
     private static void setDueDateString (int Month, int Day, int Year ) {
 
-        String monthString = Integer.toString(Month);
-        String dayString = Integer.toString(Day);
-        String yearString = Integer.toString(Year);
+        Month++;
+        String monthString = "" + Month;
+        String dayString = "" + Day;
+//        String monthString = Integer.toString(Month);
+//        String dayString = Integer.toString(Day);
+//        String yearString = Integer.toString(Year);
 
         if (Month < 10) {
             monthString = "0"+monthString;
@@ -236,14 +252,18 @@ public class AddAssignmentActivity extends Activity {
             dayString = "0"+dayString;
         }
 
-        dueDateString = monthString + "-" + dayString + "-" + yearString;
+        dueDateString = monthString + "-" + dayString + "-" + Year;
     }
 
     private static void setReminderDateString (int Month, int Day, int Year ) {
 
-        String monthString = Integer.toString(Month);
-        String dayString = Integer.toString(Day);
-        String yearString = Integer.toString(Year);
+        Month++;
+
+        String monthString = "" + Month;
+        String dayString = "" + Day;
+        //String monthString = Integer.toString(Month);
+        //String dayString = Integer.toString(Day);
+        //String yearString = Integer.toString(Year);
 
         if (Month < 10) {
             monthString = "0"+monthString;
@@ -252,7 +272,7 @@ public class AddAssignmentActivity extends Activity {
             dayString = "0"+dayString;
         }
 
-        reminderDateString = monthString + "-" + dayString + "-" + yearString;
+        reminderDateString = monthString + "-" + dayString + "-" + Year;
     }
 
 
