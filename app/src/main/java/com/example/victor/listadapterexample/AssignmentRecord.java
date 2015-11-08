@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 /**
  * Created by victor on 9/8/15.
@@ -91,13 +92,20 @@ public class AssignmentRecord {
     public void setReminderNotification (Context context) {
 
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Random random = new Random();
+        int var = random.nextInt(100);
+        notificationReceiverIntent = new Intent(context, AlarmReceiver.class);
+        notificationReceiverIntent.putExtra("Title", itemName);
+        notificationReceiverIntent.putExtra("DueDate", dueDateString);
+        notificationReceiverPendingIntent = PendingIntent.getBroadcast(context, var, notificationReceiverIntent, 0);
 
-        notificationReceiverIntent = new Intent(context, alarmNotificationReceiver.class);
-        notificationReceiverPendingIntent = PendingIntent.getBroadcast(context, 0, notificationReceiverIntent, 0);
 
 
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, getRemindDayLong(),
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 8000,
                 AlarmManager.INTERVAL_DAY, notificationReceiverPendingIntent);
+
+
 
 
 
@@ -111,7 +119,7 @@ public class AssignmentRecord {
 
 
 
-    //Receiver class when AlarmManager goes off
+/*    //Receiver class when AlarmManager goes off
     public class alarmNotificationReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent){
@@ -140,6 +148,7 @@ public class AssignmentRecord {
 
         }
     }
+    */
 
 
 

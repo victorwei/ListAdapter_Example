@@ -3,6 +3,14 @@ package com.example.victor.listadapterexample;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
+import android.content.DialogInterface;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,14 +26,24 @@ public class TimerActivity extends Activity
 {
 
 
-    Button btnStart, btnStop, btnFinish;
-    TextView textViewTimer, textDialog;
+    private Button btnStart, btnStop, btnFinish;
+    private Uri breakRingtone, workRingtone;
+    private TextView textViewTimer, textDialog;
     final static Integer studytime = 10000;        // 3 minutes
-    final static Integer breaktime = 30000;
-    final static Integer longbreaktime = 10000;
+    final static Integer breaktime = 5000;
+    final static Integer longbreaktime = 15000;
     final static Integer ticktime = 1000;         // 1 second interval
     Integer counter = 1;
-    CounterClass WorkTimer, ShortBreakTimer, LongBreakTimer;
+    private CounterClass WorkTimer, ShortBreakTimer, LongBreakTimer;
+
+    public void playRingtoneAlarm(){
+        breakRingtone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        Ringtone ringtoneSound = RingtoneManager.getRingtone(getApplicationContext(), breakRingtone);
+
+        if (ringtoneSound != null) {
+            ringtoneSound.play();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +66,8 @@ public class TimerActivity extends Activity
         startTimer(counter);
 
         //final CounterClass countertimer = new CounterClass(studytime,ticktime);
+
+
         //  Button Start
 
         btnStart.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +109,8 @@ public class TimerActivity extends Activity
 
     }
 
+
+
     public void startTimer (int counterID) {
 
         if ((counterID % 2) == 1) {
@@ -105,6 +127,13 @@ public class TimerActivity extends Activity
 
 
     }
+
+    public void createDialog (){
+        FragmentManager fm = getFragmentManager();
+        breakTimeDialog breakDialog = new breakTimeDialog();
+        breakDialog.show(fm, "breakdialog");
+
+}
 
 
     public class CounterClass extends CountDownTimer {
@@ -128,9 +157,24 @@ public class TimerActivity extends Activity
 
         @Override
         public void onFinish() {
-            textViewTimer.setText("BREAK TIME FOOL!");
-            counter += 1;
-            startTimer(counter);
+            if (counter % 2 == 1){
+                textViewTimer.setText("BREAK TIME FOOL!");
+                playRingtoneAlarm();
+                createDialog();
+                counter += 1;
+                startTimer(counter);
+
+
+
+            } else if (counter % 8 == 0) {
+                textViewTimer.setText("LONG BREAK TIME");
+                counter += 1;
+                startTimer(counter);
+            } else if (counter % 2 == 0) {
+                textViewTimer.setText("Time to get back to Studying!");
+                counter += 1;
+                startTimer(counter);
+            }
 
 
             textDialog.setText("BREAK TIME FOOL");
@@ -159,6 +203,24 @@ public class TimerActivity extends Activity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static class breakTimeDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the Builder class for convenient dialog construction
+            String alertMessage = "Good work! Take a twix";
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(alertMessage)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    });
+
+            // Create the AlertDialog object and return it
+            return builder.create();
+        }
     }
 
 }

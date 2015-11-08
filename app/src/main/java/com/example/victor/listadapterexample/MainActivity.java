@@ -52,7 +52,9 @@ public class MainActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        aAdapter = new AssignmentAdapter(getApplicationContext());
+        aAdapter = new AssignmentAdapter(getApplicationContext(), this);
+
+
 
         getListView().setHeaderDividersEnabled(true);
 
@@ -90,6 +92,7 @@ public class MainActivity extends ListActivity {
         });
 
         setListAdapter(aAdapter);
+
 
 
     }

@@ -8,9 +8,13 @@ import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -18,11 +22,14 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.net.URI;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import com.example.victor.listadapterexample.AssignmentRecord.Status;
 
@@ -43,12 +50,22 @@ public class AddAssignmentActivity extends Activity {
     private static String reminderDateString;
     private static TextView dueDateView;
     private static TextView reminderDateView;
+    private static Calendar remindDate, dueDate;
 
     // variables for
-    private Date aDate, dDate, rDate;
+    private Date aDate;
+    //private Calendar rDate, dDate;
     private EditText aAssignmentText;
     private RadioButton aDefaultRbutton;
     private RadioGroup aStatusRGroup;
+
+    /*
+    private final Context aContext;
+
+    public AddAssignmentActivity (Context context){
+        aContext = context;
+    }
+*/
 
 
 
@@ -112,6 +129,8 @@ public class AddAssignmentActivity extends Activity {
             @Override
             public void onClick(View v) {
 
+
+
                 String assignmentTitle = aAssignmentText.getText().toString();
 
                 //Status status = Status.NOTFINISHED;
@@ -119,14 +138,26 @@ public class AddAssignmentActivity extends Activity {
                 String duedate = dueDateString;
                 String reminderdate = reminderDateString;
 
-                //set up new intent and package data and send
 
-                Intent intent= new Intent();
+                if (reminderdate == null || duedate == null || assignmentTitle == null){
 
-                AssignmentRecord.sendIntent(intent, assignmentTitle, duedate, reminderdate);
+                    String toastMessage = "Oops! You forgot to fill out a field";
+                    Toast toast = Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT);
+                    toast.show();
 
-                setResult(RESULT_OK, intent);
-                finish();
+                }else {
+                    //set up new intent and package data and send
+                    Intent intent = new Intent();
+
+                    AssignmentRecord.sendIntent(intent, assignmentTitle, duedate, reminderdate);
+
+                    setResult(RESULT_OK, intent);
+
+
+                    //setCalendarEvent();
+
+                    finish();
+                }
 
             }
         });
@@ -178,10 +209,11 @@ public class AddAssignmentActivity extends Activity {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear,
                               int dayOfMonth) {
-            Calendar dDate = Calendar.getInstance();
-            dDate.set(Calendar.MONTH, monthOfYear);
-            dDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            dDate.set(Calendar.YEAR, year);
+            dueDate = Calendar.getInstance();
+            dueDate.set(Calendar.MONTH, monthOfYear);
+            dueDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            dueDate.set(Calendar.YEAR, year);
+
 
 
 
@@ -213,14 +245,27 @@ public class AddAssignmentActivity extends Activity {
         public void onDateSet(DatePicker view, int year, int monthOfYear,
                               int dayOfMonth) {
 
-            Calendar rDate = Calendar.getInstance();
-            rDate.set(Calendar.MONTH, monthOfYear);
-            rDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            rDate.set(Calendar.YEAR, year);
 
-            setReminderDateString(monthOfYear, dayOfMonth, year);
+            remindDate = Calendar.getInstance();
+            remindDate.set(Calendar.MONTH, monthOfYear);
+            remindDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            remindDate.set(Calendar.YEAR, year);
 
-            reminderDateView.setText(reminderDateString);
+
+
+
+            if (remindDate.after(dueDate)){
+                String toastMessage = "Reminder date must be before due date";
+                System.out.println("Date1 is after Date2");
+                Toast toast = Toast.makeText(getActivity(), toastMessage, Toast.LENGTH_SHORT);
+                toast.show();
+            } else {
+
+                reminderDateView.setText(reminderDateString);
+                setReminderDateString(monthOfYear, dayOfMonth, year);
+
+            }
+
         }
     }
 
@@ -238,6 +283,15 @@ public class AddAssignmentActivity extends Activity {
 
     private static void setDueDateString (int Month, int Day, int Year ) {
 
+
+        //set dueDate
+        /*
+        dueDate = Calendar.getInstance();
+        dueDate.set(Calendar.MONTH, Month);
+        dueDate.set(Calendar.DAY_OF_MONTH, Day);
+        dueDate.set(Calendar.YEAR, Year);
+        */
+
         Month++;
         String monthString = "" + Month;
         String dayString = "" + Day;
@@ -253,9 +307,18 @@ public class AddAssignmentActivity extends Activity {
         }
 
         dueDateString = monthString + "-" + dayString + "-" + Year;
+
+
     }
 
     private static void setReminderDateString (int Month, int Day, int Year ) {
+
+        /*
+        remindDate = Calendar.getInstance();
+        remindDate.set(Calendar.MONTH, Month);
+        remindDate.set(Calendar.DAY_OF_MONTH, Day);
+        remindDate.set(Calendar.YEAR, Year);
+        */
 
         Month++;
 
@@ -273,6 +336,35 @@ public class AddAssignmentActivity extends Activity {
         }
 
         reminderDateString = monthString + "-" + dayString + "-" + Year;
+    }
+
+
+
+
+    private void setCalendarEvent ( ){
+        ContentResolver contentResolver = this.getContentResolver();
+        ContentValues contentValues = new ContentValues();
+
+        String assignmentTitle = aAssignmentText.getText().toString();
+
+        contentValues.put(CalendarContract.Events.DTSTART, reminderDateString);
+        contentValues.put(CalendarContract.Events.TITLE, assignmentTitle);
+        contentValues.put(CalendarContract.Events.DESCRIPTION, "Have you completed" + assignmentTitle);
+
+        TimeZone timeZone = TimeZone.getDefault();
+        contentValues.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
+
+        contentValues.put(CalendarContract.Events.CALENDAR_ID, 1);
+
+        contentValues.put(CalendarContract.Events.RRULE, "FREQ=DAILY;UNTIL="
+                + dueDateString);
+
+        contentValues.put(CalendarContract.Events.DURATION, "+P1H");
+
+        contentValues.put(CalendarContract.Events.HAS_ALARM, 1);
+
+        Uri uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, contentValues);
+
     }
 
 

@@ -1,6 +1,18 @@
 package com.example.victor.listadapterexample;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Application;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Bundle;
+
+import android.support.v4.app.FragmentActivity;
+//import android.support.v4.app.FragmentManager;
+//import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +29,17 @@ import java.util.ArrayList;
 /**
  * Created by victor on 9/8/15.
  */
-public class AssignmentAdapter extends BaseAdapter {
+public class AssignmentAdapter extends BaseAdapter{
+
 
     private ArrayList<AssignmentRecord> alist = new ArrayList<AssignmentRecord>();
 
     private final Context aContext;
+    private final Activity aActivity;
 
-    public AssignmentAdapter (Context context){
+    public AssignmentAdapter (Context context, Activity activity){
         aContext = context;
+        aActivity = activity;
     }
 
 
@@ -35,7 +50,32 @@ public class AssignmentAdapter extends BaseAdapter {
 
     public void deleteItem (AssignmentRecord item) {
         alist.remove(item);
+        notifyDataSetChanged();
     }
+
+    /*
+    public class removeCheckedFragment extends DialogFragment{
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the Builder class for convenient dialog construction
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Do you want to remove this item?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // FIRE ZE MISSILES!
+                            //deleteItem();
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            return builder.create();
+        }
+    }
+    */
 
     @Override
     public int getCount() {
@@ -54,6 +94,8 @@ public class AssignmentAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+        //FragmentManager fragManager = activity
 
         //get current item
         final AssignmentRecord assignmentRecord = alist.get(position);
@@ -79,11 +121,41 @@ public class AssignmentAdapter extends BaseAdapter {
         }
 
         statusBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            class removeCheckedFragment extends DialogFragment{
+                @Override
+                public Dialog onCreateDialog(Bundle savedInstanceState) {
+                    // Use the Builder class for convenient dialog construction
+                    String alertMessage = "Do you want to remove this item?";
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage(alertMessage)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    deleteItem(assignmentRecord);
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User cancelled the dialog
+                                }
+                            });
+                    // Create the AlertDialog object and return it
+                    return builder.create();
+                }
+            }
+
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
+
                     //prompt to delete record;
                     assignmentRecord.setStatus(AssignmentRecord.Status.FINISHED);
+
+                    //create dialog
+                    FragmentManager fragManager = aActivity.getFragmentManager();
+                    removeCheckedFragment newFragment = new removeCheckedFragment();
+                    newFragment.show(fragManager, "TEST");
+
 
                     // cancel intent for alarm manager
 
@@ -95,9 +167,7 @@ public class AssignmentAdapter extends BaseAdapter {
             }
         });
 
-
-
-
         return itemlayoutview;
     }
+
 }
